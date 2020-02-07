@@ -1,4 +1,4 @@
-const User = require('../model/UserModel')
+const User = require('../../model/UserModel')
 
 class showUser {
   static async checkUserExists (email) {

@@ -1,4 +1,4 @@
-const User = require('../model/UserModel')
+const User = require('../../model/UserModel')
 
 class CreatNewUser {
   static async createUser (email, hashPass, expenditure = null) {

@@ -1,6 +1,6 @@
 const validatorEmail = require('../util/emailValidator')
 const validatorPassword = require('../util/passwordValidator')
-const showUser = require('../Crud/show')
+const showUser = require('../Crud/user/show')
 const GeneratorToken = require('../util/generatorToken')
 
 module.exports = {

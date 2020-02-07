@@ -4,8 +4,8 @@ const request = require('supertest')
 const validatorEmail = require('../util/emailValidator')
 const validatorPassword = require('../util/passwordValidator')
 const PassHash = require('../util/passwordHash')
-const CreatNewUser = require('../Crud/create')
-const showUser = require('../Crud/show')
+const CreatNewUser = require('../Crud/user/create')
+const showUser = require('../Crud/user/show')
 const User = require('../model/UserModel')
 const app = require('../index')
 
@@ -20,7 +20,7 @@ const MockCreateRouter = {
   password: 'other_pass11A'
 }
 
-describe.only('Suite tests for ensure correct sign up', function () {
+describe('Suite tests for ensure correct sign up', function () {
   this.beforeAll(async function () {
     await User.sync({ force: true })
   })

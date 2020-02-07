@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const GeneratorToken = require('../util/generatorToken')
 const VerifyToken = require('../util/verifyToken')
 const PassHash = require('../util/passwordHash')
-const CreatNewUser = require('../Crud/create')
+const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
 
 const mockUser = {

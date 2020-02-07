@@ -1,8 +1,8 @@
 const validatorEmail = require('../util/emailValidator')
 const PassHash = require('../util/passwordHash')
 const validatorPassword = require('../util/passwordValidator')
-const CreatNewUser = require('../Crud/create')
-const showUser = require('../Crud/show')
+const CreatNewUser = require('../Crud/user/create')
+const showUser = require('../Crud/user/show')
 
 module.exports = {
   async create (req, res) {
