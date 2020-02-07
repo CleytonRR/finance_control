@@ -10,7 +10,13 @@ const User = driver.define('user', {
   password: {
     type: Sequelize.STRING,
     allowNull: false
+  },
+
+  expenditure: {
+    type: Sequelize.FLOAT,
+    allowNull: true
   }
+
 })
 
 module.exports = User
