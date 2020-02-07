@@ -15,6 +15,4 @@ const CashRegister = driver.define('cashregister', {
 
 })
 
-CashRegister.hasOne(User)
-
 module.exports = CashRegister

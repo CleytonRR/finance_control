@@ -1,5 +1,6 @@
 const driver = require('../config/db/index')
 const Sequelize = require('sequelize')
+const CashRegister = require('./CashRegister')
 
 const User = driver.define('user', {
   email: {
@@ -18,5 +19,7 @@ const User = driver.define('user', {
   }
 
 })
+
+User.hasMany(CashRegister, { as: 'cashregister', foreignKey: 'userId' })
 
 module.exports = User
