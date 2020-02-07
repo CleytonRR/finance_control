@@ -11,7 +11,8 @@ const app = require('../index')
 
 const MockCreate = {
   email: 'any_email@gmail.com',
-  password: 'any_pass11A'
+  password: 'any_pass11A',
+  expenditure: 300
 }
 
 const MockCreateRouter = {
@@ -19,7 +20,7 @@ const MockCreateRouter = {
   password: 'other_pass11A'
 }
 
-describe('Suite tests for ensure correct sign up', function () {
+describe.only('Suite tests for ensure correct sign up', function () {
   this.beforeAll(async function () {
     await User.sync({ force: true })
   })
@@ -68,8 +69,9 @@ describe('Suite tests for ensure correct sign up', function () {
 
   it('Ensure created user with password in hash', async () => {
     const hashPass = await PassHash.generatorHash(MockCreate.password)
-    const creatUser = await CreatNewUser.createUser(MockCreate.email, hashPass)
+    const creatUser = await CreatNewUser.createUser(MockCreate.email, hashPass, MockCreate.expenditure)
     assert.deepStrictEqual(MockCreate.email, creatUser.email)
+    assert.deepStrictEqual(MockCreate.expenditure, creatUser.expenditure)
   })
 
   it('Return true if email provided already used', async () => {
