@@ -1,5 +1,6 @@
 const driver = require('../config/db/index')
 const Sequelize = require('sequelize')
+const User = require('./UserModel')
 
 const CashRegister = driver.define('cashregister', {
   valorDay: {
@@ -13,5 +14,7 @@ const CashRegister = driver.define('cashregister', {
   }
 
 })
+
+CashRegister.hasOne(User)
 
 module.exports = CashRegister
