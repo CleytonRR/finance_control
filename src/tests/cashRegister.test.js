@@ -24,7 +24,7 @@ var idValid = ''
 
 describe.only('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
-    await User.sync({ force: true })
+    await User.sync({})
   })
 
   this.beforeAll(async function () {
@@ -53,6 +53,8 @@ describe.only('Ensure correct create for CashRegister', function () {
 
   it('Ensure correct creation of cash register day', async () => {
     const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid)
-    console.log(response)
+    assert.deepStrictEqual(mockCashRegister.valorDay, response.valorDay)
+    assert.deepStrictEqual(mockCashRegister.enough, response.enough)
+    assert.deepStrictEqual(idValid, response.userId)
   })
 })
