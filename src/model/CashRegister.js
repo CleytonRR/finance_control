@@ -1,6 +1,5 @@
 const driver = require('../config/db/index')
 const Sequelize = require('sequelize')
-const User = require('./UserModel')
 
 const CashRegister = driver.define('cashregister', {
   valorDay: {

@@ -24,7 +24,7 @@ var idValid = ''
 
 describe.only('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
-    await User.sync()
+    await User.sync({ force: true })
   })
 
   this.beforeAll(async function () {
@@ -39,6 +39,12 @@ describe.only('Ensure correct create for CashRegister', function () {
 
   this.afterAll(async function () {
     await CashRegister.destroy({
+      where: {
+        id: idValid
+      }
+    })
+
+    await User.destroy({
       where: {
         id: idValid
       }
