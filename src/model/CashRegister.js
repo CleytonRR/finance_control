@@ -10,8 +10,15 @@ const CashRegister = driver.define('cashregister', {
   enough: {
     type: Sequelize.BOOLEAN,
     allowNull: false
+  },
+
+  created: {
+    type: Sequelize.DATE,
+    defaultValue: new Date()
   }
 
+}, {
+  timestamps: false
 })
 
 module.exports = CashRegister

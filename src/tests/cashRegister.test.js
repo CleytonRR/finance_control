@@ -56,5 +56,6 @@ describe.only('Ensure correct create for CashRegister', function () {
     assert.deepStrictEqual(mockCashRegister.valorDay, response.valorDay)
     assert.deepStrictEqual(mockCashRegister.enough, response.enough)
     assert.deepStrictEqual(idValid, response.userId)
+    assert.deepStrictEqual(response.created.toString(), new Date().toString())
   })
 })
