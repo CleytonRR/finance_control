@@ -5,13 +5,15 @@ const request = require('supertest')
 const app = require('../index')
 const CashRegister = require('../model/CashRegister')
 const createNewCashRegister = require('../Crud/cash/create')
+const showCashRegister = require('../Crud/cash/show')
 const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
 const PassHash = require('../util/passwordHash')
 
 const mockCashRegister = {
   valorDay: 30,
-  enough: true
+  enough: true,
+  created: new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
 }
 
 const user = {
@@ -52,11 +54,15 @@ describe.only('Ensure correct create for CashRegister', function () {
   })
 
   it('Ensure correct creation of cash register day', async () => {
-    var created = new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
-    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid, created)
+    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid, mockCashRegister.created)
     assert.deepStrictEqual(mockCashRegister.valorDay, response.valorDay)
     assert.deepStrictEqual(mockCashRegister.enough, response.enough)
     assert.deepStrictEqual(idValid, response.userId)
     assert.deepStrictEqual(response.created.getDate(), new Date().getDate())
+  })
+
+  it('Ensure unique creation of cashRegister peer day', async () => {
+    const response = await showCashRegister.checkCashRegisterExists(mockCashRegister.created)
+    assert.deepStrictEqual(true, response[0])
   })
 })
