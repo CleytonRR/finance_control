@@ -52,10 +52,11 @@ describe.only('Ensure correct create for CashRegister', function () {
   })
 
   it('Ensure correct creation of cash register day', async () => {
-    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid)
+    var created = new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
+    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid, created)
     assert.deepStrictEqual(mockCashRegister.valorDay, response.valorDay)
     assert.deepStrictEqual(mockCashRegister.enough, response.enough)
     assert.deepStrictEqual(idValid, response.userId)
-    assert.deepStrictEqual(response.created.toString(), new Date().toString())
+    assert.deepStrictEqual(response.created.getDate(), new Date().getDate())
   })
 })

@@ -13,8 +13,7 @@ const CashRegister = driver.define('cashregister', {
   },
 
   created: {
-    type: Sequelize.DATE,
-    defaultValue: new Date()
+    type: Sequelize.DATE
   }
 
 }, {
