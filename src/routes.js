@@ -8,6 +8,6 @@ const routes = Router()
 
 routes.post('/user', UserController.create)
 routes.post('/login', LoginController.authenticar)
-routes.get('/private', testLogin, Authorization.private)
+routes.get('/cashRegister', testLogin, Authorization.private)
 
 module.exports = routes

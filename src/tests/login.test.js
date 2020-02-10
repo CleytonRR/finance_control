@@ -11,7 +11,6 @@ const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
 
 const mockUser = {
-  id: 1,
   email: 'any_email@gmail.com',
   password: 'asdqweAA_11'
 }
@@ -33,19 +32,28 @@ const invalidUser = {
 
 const messageError = 'Email or password invalid'
 
+var idValid = ''
 var invalidToken = ''
 var validtoken = ''
 
 describe('Suite tests for ensure correct login', function () {
   this.beforeAll(async function () {
-    await User.sync({ force: true })
+    await User.sync()
   })
 
   this.beforeAll(async function () {
     var passwordHash = await PassHash.generatorHash(mockUser.password)
-    await CreatNewUser.createUser(mockUser.email, passwordHash)
+    const response = await CreatNewUser.createUser(mockUser.email, passwordHash)
+    idValid = response.id
   })
 
+  this.afterAll(async function () {
+    await User.destroy({
+      where: {
+        id: idValid
+      }
+    })
+  })
   it('Ensure return a token basead in email and id of user', () => {
     const response = GeneratorToken.token(mockUser.id, mockUser.email)
     validtoken = response
@@ -68,7 +76,6 @@ describe('Suite tests for ensure correct login', function () {
   it('POST/Login -> If email and password provided is valid, return a token', async () => {
     const response = await request(app).post('/login').send(mockUser).set('Accept', 'application/json')
     var decoded = jwt.verify(response.body.token, process.env.JWT_KEY)
-    assert.deepStrictEqual(mockUser.id, decoded.id)
     assert.deepStrictEqual(mockUser.email, decoded.email)
     assert.deepStrictEqual(200, response.status)
   })
@@ -98,17 +105,17 @@ describe('Suite tests for ensure correct login', function () {
   })
 
   it('Test for ensure correct token in header for acess url', async () => {
-    const response = await request(app).get('/private').send(mockUser).set({ authorization: 'beer ' + validtoken, Accept: 'application/json' })
+    const response = await request(app).get('/cashRegister').send(mockUser).set({ authorization: 'beer ' + validtoken, Accept: 'application/json' })
     assert.deepStrictEqual(200, response.status)
   })
 
   it('Test for ensure if incorrect token in header return status 401', async () => {
-    const response = await request(app).get('/private').send(mockUser).set({ authorization: 'beer ' + invalidToken, Accept: 'application/json' })
+    const response = await request(app).get('/cashRegister').send(mockUser).set({ authorization: 'beer ' + invalidToken, Accept: 'application/json' })
     assert.deepStrictEqual(401, response.status)
   })
 
   it('Test for ensure if token is not provided in header return status 400', async () => {
-    const response = await request(app).get('/private').send(mockUser).set({ Accept: 'application/json' })
+    const response = await request(app).get('/cashRegister').send(mockUser).set({ Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('Token is not provided', response.body.message)
   })

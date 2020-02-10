@@ -20,9 +20,24 @@ const MockCreateRouter = {
   password: 'other_pass11A'
 }
 
+var idValid = ''
+
 describe('Suite tests for ensure correct sign up', function () {
   this.beforeAll(async function () {
-    await User.sync({ force: true })
+    await User.sync()
+  })
+
+  this.afterAll(async function () {
+    await User.destroy({
+      where: {
+        email: MockCreateRouter.email
+      }
+    })
+    await User.destroy({
+      where: {
+        id: idValid
+      }
+    })
   })
 
   it('return True if provided correct email', () => {
@@ -70,6 +85,7 @@ describe('Suite tests for ensure correct sign up', function () {
   it('Ensure created user with password in hash', async () => {
     const hashPass = await PassHash.generatorHash(MockCreate.password)
     const creatUser = await CreatNewUser.createUser(MockCreate.email, hashPass, MockCreate.expenditure)
+    idValid = creatUser.id
     assert.deepStrictEqual(MockCreate.email, creatUser.email)
     assert.deepStrictEqual(MockCreate.expenditure, creatUser.expenditure)
   })
