@@ -9,10 +9,13 @@ const VerifyToken = require('../util/verifyToken')
 const PassHash = require('../util/passwordHash')
 const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
+const TokenData = require('../util/tokenDatas')
 
 const mockUser = {
   email: 'any_email@gmail.com',
-  password: 'asdqweAA_11'
+  password: 'asdqweAA_11',
+  expenditure: 300
+
 }
 
 const emailInvalid = {
@@ -36,14 +39,14 @@ var idValid = ''
 var invalidToken = ''
 var validtoken = ''
 
-describe('Suite tests for ensure correct login', function () {
+describe.only('Suite tests for ensure correct login', function () {
   this.beforeAll(async function () {
     await User.sync()
   })
 
   this.beforeAll(async function () {
     var passwordHash = await PassHash.generatorHash(mockUser.password)
-    const response = await CreatNewUser.createUser(mockUser.email, passwordHash)
+    const response = await CreatNewUser.createUser(mockUser.email, passwordHash, mockUser.expenditure)
     idValid = response.id
   })
 
@@ -105,18 +108,23 @@ describe('Suite tests for ensure correct login', function () {
   })
 
   it('Test for ensure correct token in header for acess url', async () => {
-    const response = await request(app).get('/cashRegister').send(mockUser).set({ authorization: 'beer ' + validtoken, Accept: 'application/json' })
-    assert.deepStrictEqual(200, response.status)
+    const response = await request(app).post('/cashRegister').set({ authorization: 'beer ' + validtoken, Accept: 'application/json' })
+    assert.deepStrictEqual(201, response.status)
   })
 
   it('Test for ensure if incorrect token in header return status 401', async () => {
-    const response = await request(app).get('/cashRegister').send(mockUser).set({ authorization: 'beer ' + invalidToken, Accept: 'application/json' })
+    const response = await request(app).post('/cashRegister').set({ authorization: 'beer ' + invalidToken, Accept: 'application/json' })
     assert.deepStrictEqual(401, response.status)
   })
 
   it('Test for ensure if token is not provided in header return status 400', async () => {
-    const response = await request(app).get('/cashRegister').send(mockUser).set({ Accept: 'application/json' })
+    const response = await request(app).post('/cashRegister').set({ Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('Token is not provided', response.body.message)
+  })
+
+  it('Test for ensure correct expenditure', async () => {
+    const response = await TokenData.expenditure('beer ' + validtoken)
+    assert.deepStrictEqual(mockUser.expenditure / 30, response / 30)
   })
 })
