@@ -9,10 +9,15 @@ const showCashRegister = require('../Crud/cash/show')
 const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
 const PassHash = require('../util/passwordHash')
+const enoughCheck = require('../util/enoughCheck')
 
 const mockCashRegister = {
   valorDay: 30,
-  enough: true,
+  created: new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
+}
+
+const mockCashRegisterFalse = {
+  valorDay: 5,
   created: new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
 }
 
@@ -24,7 +29,7 @@ const user = {
 
 var idValid = ''
 
-describe('Ensure correct create for CashRegister', function () {
+describe.only('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
     await User.sync({})
   })
@@ -53,10 +58,21 @@ describe('Ensure correct create for CashRegister', function () {
     })
   })
 
-  it('Ensure correct creation of cash register day', async () => {
-    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, mockCashRegister.enough, idValid, mockCashRegister.created)
+  it('If valorDay bigger equal which expenditure for day, create cash Register with enough true', async () => {
+    const testDatas = enoughCheck.check(user.expenditure / 30, mockCashRegister.valorDay)
+    const response = await createNewCashRegister.createNew(mockCashRegister.valorDay, testDatas, idValid, mockCashRegister.created)
     assert.deepStrictEqual(mockCashRegister.valorDay, response.valorDay)
-    assert.deepStrictEqual(mockCashRegister.enough, response.enough)
+    assert.deepStrictEqual(true, response.enough)
+    assert.deepStrictEqual(idValid, response.userId)
+    assert.deepStrictEqual(new Date().getDate(), response.created.getDate())
+  })
+
+  it('If valorDay smaller which expenditure for day, create cash Register with enough false', async () => {
+    const testDatas = enoughCheck.check(user.expenditure / 30, mockCashRegisterFalse.valorDay)
+    console.log((user.expenditure) / 30, mockCashRegisterFalse.valorDay)
+    const response = await createNewCashRegister.createNew(mockCashRegisterFalse.valorDay, testDatas, idValid, mockCashRegisterFalse.created)
+    assert.deepStrictEqual(mockCashRegisterFalse.valorDay, response.valorDay)
+    assert.deepStrictEqual(false, response.enough)
     assert.deepStrictEqual(idValid, response.userId)
     assert.deepStrictEqual(new Date().getDate(), response.created.getDate())
   })

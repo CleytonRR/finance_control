@@ -39,7 +39,7 @@ var idValid = ''
 var invalidToken = ''
 var validtoken = ''
 
-describe.only('Suite tests for ensure correct login', function () {
+describe('Suite tests for ensure correct login', function () {
   this.beforeAll(async function () {
     await User.sync()
   })
