@@ -2,6 +2,7 @@ const createNewCashRegister = require('../Crud/cash/create')
 const showCashRegister = require('../Crud/cash/show')
 const TokenData = require('../util/tokenDatas')
 const enoughCheck = require('../util/enoughCheck')
+const listCashRegister = require('../Crud/cash/listCashRegister')
 
 module.exports = {
   async createNew (req, res) {
@@ -34,6 +35,20 @@ module.exports = {
       return res.status(201).json({ message: 'Created correct' })
     } catch (error) {
       return res.status(500).json({ message: 'Internal Error' })
+    }
+  },
+
+  async listCashRegister (req, res) {
+    try {
+      const tokenId = await TokenData.getId(req.headers.authorization)
+      const datas = await listCashRegister.registers(tokenId)
+      if (!datas) {
+        return res.status(400).json({ message: 'not datas' })
+      }
+
+      return res.status(200).json(datas[1])
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal error' })
     }
   }
 }

@@ -9,5 +9,6 @@ const routes = Router()
 routes.post('/user', UserController.create)
 routes.post('/login', LoginController.authenticar)
 routes.post('/cashRegister', testLogin, CashRegister.createNew)
+routes.get('/cashRegister', testLogin, CashRegister.listCashRegister)
 
 module.exports = routes

@@ -40,6 +40,13 @@ const user = {
 var idValid = ''
 var token = ''
 
+// From correct function created tokens and past here
+
+// Token with datas, datas created and token generator in API
+var tokenDb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhbnlfbWFpbEBnbWFpbC5jb20iLCJpYXQiOjE1ODE1NDA3MjUsImV4cCI6MTU4MTU0NDMyNX0.SbixU6OJz-6rxOrUDGsHMofIEknWrudKiDCwMz7m7lU'
+// Token without datas created and token gerator in api
+var tokenWhitoutDatas = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJhbnlfbWFpbG1haWxtYWlsQGdtYWlsLmNvbSIsImlhdCI6MTU4MTU0MzU3OCwiZXhwIjoxNTgxNTQ3MTc4fQ.Vd0pgIZ44yhFmw9RWR2Rh-SOWnjT8rDOajVvzeTGruY'
+
 describe('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
     await User.sync({})
@@ -109,7 +116,7 @@ describe('Ensure correct create for CashRegister', function () {
     assert.deepStrictEqual('There is already a record made today', response.body.message)
   })
 
-  it('POST/casRegister -> return 400 if valor day not provided in body request', async () => {
+  it('POST/cashRegister -> return 400 if valor day not provided in body request', async () => {
     const response = await request(app).post('/cashRegister').send(mockCashRouterDate).set({ authorization: 'beer ' + token, Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('Valor Day not provided', response.body.message)
@@ -118,5 +125,18 @@ describe('Ensure correct create for CashRegister', function () {
   it('POST/cashRegister -> return 201 if correct datas are provided', async () => {
     const response = await request(app).post('/cashRegister').send(mockCashRouter).set({ authorization: 'beer ' + token, Accept: 'application/json' })
     assert.deepStrictEqual(201, response.status)
+  })
+
+  it('GET/cashRegister -> return list with results basead in user id', async () => {
+    // Test make using token from api
+    const response = await request(app).get('/cashRegister').set({ authorization: 'beer ' + tokenDb, Accept: 'application/json' })
+    assert.deepStrictEqual(200, response.status)
+  })
+
+  it('GET/cashRegister -> return 400 if not data associeted the user id', async () => {
+    // Test make using token from api
+    const response = await request(app).get('/cashRegister').set({ authorization: 'beer ' + tokenWhitoutDatas, Accept: 'application/json' })
+    assert.deepStrictEqual(400, response.status)
+    assert.deepStrictEqual('not datas', response.body.message)
   })
 })
