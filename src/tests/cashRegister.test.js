@@ -22,6 +22,10 @@ const mockCashRouter = {
   created: new Date('February 1, 2020')
 }
 
+const mockCashRouterDate = {
+  created: new Date('February 1, 2020')
+}
+
 const mockCashRegisterFalse = {
   valorDay: 5,
   created: new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
@@ -103,6 +107,12 @@ describe.only('Ensure correct create for CashRegister', function () {
     const response = await request(app).post('/cashRegister').send(mockCashRegister).set({ authorization: 'beer ' + token, Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('There is already a record made today', response.body.message)
+  })
+
+  it('POST/casRegister -> return 400 if valor day not provided in body request', async () => {
+    const response = await request(app).post('/cashRegister').send(mockCashRouterDate).set({ authorization: 'beer ' + token, Accept: 'application/json' })
+    assert.deepStrictEqual(400, response.status)
+    assert.deepStrictEqual('Valor Day not provided', response.body.message)
   })
 
   it('POST/cashRegister -> return 201 if correct datas are provided', async () => {

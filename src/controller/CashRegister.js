@@ -17,6 +17,10 @@ module.exports = {
 
       const valueData = await showCashRegister.checkCashRegisterExists(new Date(dataRequest.created), tokenId)
 
+      if (!dataRequest.valorDay) {
+        return res.status(400).json({ message: 'Valor Day not provided' })
+      }
+
       if (valueData[0]) {
         return res.status(400).json({ message: 'There is already a record made today', dataAtual: valueData[0] })
       }
