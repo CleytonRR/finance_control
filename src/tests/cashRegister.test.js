@@ -40,7 +40,7 @@ const user = {
 var idValid = ''
 var token = ''
 
-describe.only('Ensure correct create for CashRegister', function () {
+describe('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
     await User.sync({})
   })

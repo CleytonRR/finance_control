@@ -109,7 +109,7 @@ describe('Suite tests for ensure correct login', function () {
 
   it('Test for ensure correct token in header for acess url', async () => {
     const response = await request(app).post('/cashRegister').set({ authorization: 'beer ' + validtoken, Accept: 'application/json' })
-    assert.deepStrictEqual(201, response.status)
+    assert.deepStrictEqual(400, response.status)
   })
 
   it('Test for ensure if incorrect token in header return status 401', async () => {
