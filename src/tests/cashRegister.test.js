@@ -90,9 +90,8 @@ describe.only('Ensure correct create for CashRegister', function () {
     assert.deepStrictEqual(true, response[0])
   })
 
-  it.only('Make sure to return false if cash register does not have the requested date at creation', async () => {
+  it('Make sure to return false if cash register does not have the requested date at creation', async () => {
     const response = await showCashRegister.checkCashRegisterExists(new Date('February 1, 2020'))
-    console.log(response)
     assert.deepStrictEqual(false, response)
   })
 
@@ -105,5 +104,10 @@ describe.only('Ensure correct create for CashRegister', function () {
     const response = await request(app).post('/cashRegister').send(mockCashRegister).set({ authorization: 'beer ' + token, Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('There is already a record made today', response.body.message)
+  })
+
+  it('POST/cashRegister -> return 201 if correct datas are provided', async () => {
+    const response = await request(app).post('/cashRegister').send(mockCashRouter).set({ authorization: 'beer ' + token, Accept: 'application/json' })
+    assert.deepStrictEqual(201, response.status)
   })
 })

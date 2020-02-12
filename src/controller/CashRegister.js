@@ -15,8 +15,11 @@ module.exports = {
       const expenditure = TokenData.expenditure(req.headers.authorization)
       const enough = enoughCheck.check(expenditure, dataRequest.valorDay)
 
-      if (showCashRegister.checkCashRegisterExists(new Date(dataRequest.created))) {
-        return res.status(400).json({ message: 'There is already a record made today' })
+      const valueData = await showCashRegister.checkCashRegisterExists(new Date(dataRequest.created))
+
+      if (valueData[0]) {
+        console.log('Data que vem no body', dataRequest.created)
+        return res.status(400).json({ message: 'There is already a record made today', dataAtual: valueData[0] })
       }
 
       await createNewCashRegister.createNew(
