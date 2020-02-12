@@ -12,6 +12,17 @@ class TokenData {
       return false
     }
   }
+
+  static async getId (tokenBeer) {
+    const token = tokenBeer.split(' ')[1]
+    try {
+      const datasToken = jwt.verify(token, process.env.JWT_KEY)
+      const datasUser = await showUser.checkUserExists(datasToken.email)
+      return datasUser[1].id
+    } catch (error) {
+      return false
+    }
+  }
 }
 
 module.exports = TokenData

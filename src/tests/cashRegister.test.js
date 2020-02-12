@@ -10,10 +10,16 @@ const CreatNewUser = require('../Crud/user/create')
 const User = require('../model/UserModel')
 const PassHash = require('../util/passwordHash')
 const enoughCheck = require('../util/enoughCheck')
+const GeneratorToken = require('../util/generatorToken')
 
 const mockCashRegister = {
   valorDay: 30,
   created: new Date().toLocaleDateString([], { Option: { timeZone: 'America/Sao_Paulo' } })
+}
+
+const mockCashRouter = {
+  valorDay: 30,
+  created: new Date('February 1, 2020')
 }
 
 const mockCashRegisterFalse = {
@@ -28,6 +34,7 @@ const user = {
 }
 
 var idValid = ''
+var token = ''
 
 describe.only('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
@@ -42,6 +49,7 @@ describe.only('Ensure correct create for CashRegister', function () {
     const hashPass = await PassHash.generatorHash(user.password)
     const creatUser = await CreatNewUser.createUser(user.email, hashPass, user.expenditure)
     idValid = creatUser.id
+    token = GeneratorToken.token(creatUser.id, creatUser.email)
   })
 
   this.afterAll(async function () {
@@ -80,5 +88,22 @@ describe.only('Ensure correct create for CashRegister', function () {
   it('Ensure unique creation of cashRegister peer day', async () => {
     const response = await showCashRegister.checkCashRegisterExists(new Date(mockCashRegister.created))
     assert.deepStrictEqual(true, response[0])
+  })
+
+  it.only('Make sure to return false if cash register does not have the requested date at creation', async () => {
+    const response = await showCashRegister.checkCashRegisterExists(new Date('February 1, 2020'))
+    console.log(response)
+    assert.deepStrictEqual(false, response)
+  })
+
+  it('POST/cashRegister -> return 400 if no data provided in body request', async () => {
+    const response = await request(app).post('/cashRegister').send({}).set({ authorization: 'beer ' + token, Accept: 'application/json' })
+    assert.deepStrictEqual(400, response.status)
+  })
+
+  it('POST/cashRegister -> return 400 if date already use', async () => {
+    const response = await request(app).post('/cashRegister').send(mockCashRegister).set({ authorization: 'beer ' + token, Accept: 'application/json' })
+    assert.deepStrictEqual(400, response.status)
+    assert.deepStrictEqual('There is already a record made today', response.body.message)
   })
 })

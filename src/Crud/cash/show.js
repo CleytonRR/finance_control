@@ -6,6 +6,7 @@ class showCashRegister {
       const response = await CashRegister.findOne({
         where: { created }
       })
+
       if (response === null || parseInt(response) === 0) {
         return false
       }
