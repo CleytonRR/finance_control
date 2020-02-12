@@ -77,7 +77,6 @@ describe.only('Ensure correct create for CashRegister', function () {
 
   it('If valorDay smaller which expenditure for day, create cash Register with enough false', async () => {
     const testDatas = enoughCheck.check(user.expenditure / 30, mockCashRegisterFalse.valorDay)
-    console.log((user.expenditure) / 30, mockCashRegisterFalse.valorDay)
     const response = await createNewCashRegister.createNew(mockCashRegisterFalse.valorDay, testDatas, idValid, mockCashRegisterFalse.created)
     assert.deepStrictEqual(mockCashRegisterFalse.valorDay, response.valorDay)
     assert.deepStrictEqual(false, response.enough)
@@ -86,12 +85,12 @@ describe.only('Ensure correct create for CashRegister', function () {
   })
 
   it('Ensure unique creation of cashRegister peer day', async () => {
-    const response = await showCashRegister.checkCashRegisterExists(new Date(mockCashRegister.created))
+    const response = await showCashRegister.checkCashRegisterExists(new Date(mockCashRegister.created), idValid)
     assert.deepStrictEqual(true, response[0])
   })
 
   it('Make sure to return false if cash register does not have the requested date at creation', async () => {
-    const response = await showCashRegister.checkCashRegisterExists(new Date('February 1, 2020'))
+    const response = await showCashRegister.checkCashRegisterExists(new Date('February 1, 2020'), idValid)
     assert.deepStrictEqual(false, response)
   })
 

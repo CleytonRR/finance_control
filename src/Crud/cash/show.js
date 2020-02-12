@@ -1,10 +1,13 @@
 const CashRegister = require('../../model/CashRegister')
 
 class showCashRegister {
-  static async checkCashRegisterExists (created) {
+  static async checkCashRegisterExists (created, userId) {
     try {
       const response = await CashRegister.findOne({
-        where: { created }
+        where: {
+          created,
+          userId
+        }
       })
 
       if (response === null || parseInt(response) === 0) {
