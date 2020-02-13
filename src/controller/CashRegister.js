@@ -13,7 +13,7 @@ module.exports = {
 
       const dataRequest = req.body
       const tokenId = await TokenData.getId(req.headers.authorization)
-      const expenditure = TokenData.expenditure(req.headers.authorization)
+      const expenditure = await TokenData.expenditure(req.headers.authorization)
       const enough = enoughCheck.check(expenditure, dataRequest.valorDay)
 
       const valueData = await showCashRegister.checkCashRegisterExists(new Date(dataRequest.created), tokenId)
