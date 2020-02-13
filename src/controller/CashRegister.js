@@ -41,7 +41,7 @@ module.exports = {
   async listCashRegister (req, res) {
     try {
       const tokenId = await TokenData.getId(req.headers.authorization)
-      const datas = await listCashRegister.registers(tokenId)
+      const datas = await listCashRegister.registers(tokenId, Number(req.params.registerCont))
       if (!datas) {
         return res.status(400).json({ message: 'not datas' })
       }

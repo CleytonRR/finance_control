@@ -43,11 +43,11 @@ var token = ''
 // From correct function created tokens and past here
 
 // Token with datas, datas created and token generator in API
-var tokenDb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhbnlfbWFpbEBnbWFpbC5jb20iLCJpYXQiOjE1ODE1NDA3MjUsImV4cCI6MTU4MTU0NDMyNX0.SbixU6OJz-6rxOrUDGsHMofIEknWrudKiDCwMz7m7lU'
+var tokenDb = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJhbnlfbWFpbEBnbWFpbC5jb20iLCJpYXQiOjE1ODE1NTg0MzgsImV4cCI6MTU4MTU2MjAzOH0.QA-O1dskPKM0w-mE3z4PsOqGVkWtBEE8I54ZImIl0FI'
 // Token without datas created and token gerator in api
-var tokenWhitoutDatas = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJhbnlfbWFpbG1haWxtYWlsQGdtYWlsLmNvbSIsImlhdCI6MTU4MTU0MzU3OCwiZXhwIjoxNTgxNTQ3MTc4fQ.Vd0pgIZ44yhFmw9RWR2Rh-SOWnjT8rDOajVvzeTGruY'
+var tokenWhitoutDatas = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiZW1haWwiOiJhbnlfbWFpbG1haWxtYWlsQGdtYWlsLmNvbSIsImlhdCI6MTU4MTU1ODM5NCwiZXhwIjoxNTgxNTYxOTk0fQ.Yab5xwkFZXL1KAadZlmNrpn32GS9Ia9JzrZyn579V_8'
 
-describe('Ensure correct create for CashRegister', function () {
+describe.only('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
     await User.sync({})
   })
@@ -129,13 +129,16 @@ describe('Ensure correct create for CashRegister', function () {
 
   it('GET/cashRegister -> return list with results basead in user id', async () => {
     // Test make using token from api
-    const response = await request(app).get('/cashRegister').set({ authorization: 'beer ' + tokenDb, Accept: 'application/json' })
+    const cont = 10
+    const response = await request(app).get(`/cashRegister/${cont}`).set({ authorization: 'beer ' + tokenDb, Accept: 'application/json' })
     assert.deepStrictEqual(200, response.status)
+    assert.deepStrictEqual(cont, response.body.length)
+    console.log(response.body)
   })
 
   it('GET/cashRegister -> return 400 if not data associeted the user id', async () => {
     // Test make using token from api
-    const response = await request(app).get('/cashRegister').set({ authorization: 'beer ' + tokenWhitoutDatas, Accept: 'application/json' })
+    const response = await request(app).get('/cashRegister/2').set({ authorization: 'beer ' + tokenWhitoutDatas, Accept: 'application/json' })
     assert.deepStrictEqual(400, response.status)
     assert.deepStrictEqual('not datas', response.body.message)
   })
