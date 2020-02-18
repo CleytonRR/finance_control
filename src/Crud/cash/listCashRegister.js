@@ -13,7 +13,15 @@ class listCashRegister {
         ]
       })
 
-      if (response === null || parseInt(response) === 0 || response.length === 0) {
+      if (response.length === 0) {
+        return (
+          [
+            true,
+            response
+          ]
+        )
+      }
+      if (response === null || parseInt(response) === 0) {
         return false
       }
       return (
