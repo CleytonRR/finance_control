@@ -46,7 +46,7 @@ var idValid = ''
 var token = ''
 var tokenWhitoutDatas = ''
 
-describe.only('Ensure correct create for CashRegister', function () {
+describe('Ensure correct create for CashRegister', function () {
   this.beforeAll(async function () {
     await User.sync({})
   })
@@ -92,7 +92,7 @@ describe.only('Ensure correct create for CashRegister', function () {
   })
 
   it('If valorDay smaller which expenditure for day, create cash Register with enough false', async () => {
-    const testDatas = enoughCheck.check(user.expenditure / 30, mockCashRegisterFalse.valorDay)
+    const testDatas = enoughCheck.check(user.expenditure, mockCashRegisterFalse.valorDay)
     const response = await createNewCashRegister.createNew(mockCashRegisterFalse.valorDay, testDatas, idValid, mockCashRegisterFalse.created)
     assert.deepStrictEqual(mockCashRegisterFalse.valorDay, response.valorDay)
     assert.deepStrictEqual(false, response.enough)
@@ -143,7 +143,7 @@ describe.only('Ensure correct create for CashRegister', function () {
   it('GET/cashRegister -> return 400 if not data associeted the user id', async () => {
     // Test make using token from api
     const response = await request(app).get('/cashRegister/0').set({ authorization: 'beer ' + tokenWhitoutDatas, Accept: 'application/json' })
-    assert.deepStrictEqual(400, response.status)
-    assert.deepStrictEqual('not datas', response.body.message)
+    assert.deepStrictEqual(200, response.status)
+    assert.deepStrictEqual([], response.body)
   })
 })
